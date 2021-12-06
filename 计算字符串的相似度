@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstring>
+#include <iomanip>
+using namespace std;
+string a, b;
+int m[30][30];
+int f(int x, int y)
+{
+	if (m[x][y] != 0)
+	{
+		return m[x][y];
+	}
+	if (x == 0 && y == 0)
+		return 0;
+	
+
+	if (a[x-1] == b[y-1])
+	{
+		m[x][y] = f(x - 1, y - 1);
+		return m[x][y];
+	}
+	else if (a[x-1] != b[y-1])
+	{
+		m[x][y] = min(min(f(x - 1, y), f(x, y - 1)), f(x - 1, y - 1)) + 1;
+		return m[x][y];
+	}
+}
+int main()
+{
+	int N;
+	cin >> N;
+	int i, j, k;
+	for (i = 1; i <= N; i++)
+	{
+		cin >> a >> b;
+		memset(m, 0, sizeof(m));
+		for (j = 0; j <= 29; j++)
+		{
+			m[j][0] = j;
+			m[0][j] = j;
+		}
+		cout << fixed << setprecision(6) << 1.0 / (1 + f(a.length(), b.length())) << endl;
+	}
+	return 0;
+}
