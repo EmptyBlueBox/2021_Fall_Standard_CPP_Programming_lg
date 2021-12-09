@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main()
+{
+	int i, j, k, l;
+	int N;
+	cin >> N;
+	int r, s, t;
+	int a[100][100];
+	int b[100][100];
+	int c[100][100];
+	int* p1 = nullptr, * p2 = nullptr, * p3 = nullptr;
+	for (l = 1; l <= N; l++)
+	{
+		cin >> r >> s >> t;
+		for (i = 0; i <= r - 1; i++)
+			for (j = 0; j <= s - 1; j++)
+				cin >> a[i][j];
+		for (i = 0; i <= s - 1; i++)
+			for (j = 0; j <= t - 1; j++)
+				cin >> b[j][i];
+		memset(c, 0, sizeof(c));
+
+		for (i = 0; i <= r - 1; i++)
+		{
+			for (j = 0; j <= t - 1; j++)
+			{
+				p1 = a[i];
+				p2 = b[j];
+				for (k = 1; k <= s; k++)
+				{
+					c[i][j] += *p1 * *p2;
+					p1++;
+					p2++;
+				}
+			}
+		}
+		for (i = 0; i <= r - 1; i++)
+		{
+			cout << c[i][0];
+			for (j = 1; j <= t - 1; j++)
+			{
+				cout << " " << c[i][j];
+			}
+			cout << endl;
+		}
+	}
+
+}
