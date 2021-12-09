@@ -7,17 +7,17 @@ int a[210][210];
 int dp[210][210];
 int f(int x, int y)
 {
-	if (dp[x][y] != -100000)
+	int i, j;
+	if (dp[x][y] != -1000000)
 		return dp[x][y];
 	int zuo[210], you[210];
 	zuo[1] = f(x - 1, 1) + a[x][1];
-	you[n] = f(x - 1, n) + a[x][n] - a[x][n - 1];
-	int i, j;
+	you[n] = f(x - 1, n) + a[x][n];
 
 	for (i = 2; i <= n; i++)//x行，i列
-		zuo[i] = max(zuo[i - 1], f(x - 1, i)) + a[x][i] - a[x][i - 1];
+		zuo[i] = max(zuo[i - 1], f(x - 1, i)) + a[x][i];
 	for (i = n - 1; i >= 1; i--)
-		you[i] = max(you[i + 1], f(x - 1, i)) + a[x][i] - a[x][i - 1];
+		you[i] = max(you[i + 1], f(x - 1, i)) + a[x][i];
 	for (i = 1; i <= n; i++)
 		dp[x][i] = max(zuo[i], you[i]);
 	return dp[x][y];
@@ -30,27 +30,15 @@ int main()
 		memset(a, 0, sizeof(a));
 		for (i = 1; i <= m; i++)
 			for (j = 1; j <= n; j++)
-			{
 				cin >> a[i][j];
-				a[i][j] += a[i][j - 1];//前缀和
-			}
 
-		int ans = -100000;
-		for (i = 1; i <= n; i++)//对第一行每一个做dp
-		{
-			memset(dp, 0, sizeof(dp));
-			dp[1][i] = a[1][i] - a[1][i - 1];
-			for (j = i - 1; j >= 1; j--)
-				dp[1][j] = a[1][i] - a[1][j - 1];
-			for (j = i + 1; j <= n; j++)
-				dp[1][j] = a[1][j] - a[1][i - 1];
-			for (j = 2; j <= m; j++)
-				for (k = 1; k <= n; k++)
-					dp[j][k] = -100000;
-
-			for (j = 1; j <= n; j++)
-				ans = max(ans, f(m, j));
-		}
+		int ans = -1000000;
+		memset(dp, 0, sizeof(dp));
+		for (j = 1; j <= m; j++)
+			for (k = 1; k <= n; k++)
+				dp[j][k] = -1000000;
+		for (i = 1; i <= n; i++)
+			ans = max(ans, f(m, i));
 		cout << ans << endl;
 	}
 }
