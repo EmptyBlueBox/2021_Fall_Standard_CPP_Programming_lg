@@ -1,0 +1,25 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int t0, n;
+	cin >> t0 >> n;
+	int i, j, k;
+	int t[101], w[101];
+	for (i = 1; i <= n; i++)
+		cin >> t[i] >> w[i];
+
+	int dp[110][1010] = { {0} };
+	for (i = 1; i <= n; i++)
+	{
+		for (j = t0; j >= 1; j--)
+		{
+			if (j < t[i])
+				dp[i][j] = dp[i - 1][j];
+			else
+				dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - t[i]] + w[i]);
+		}
+	}
+	cout << dp[n][t0];
+}
