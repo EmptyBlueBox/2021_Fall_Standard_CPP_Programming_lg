@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+	string a, temp;
+	int i, j, k, power;
+	double ans;
+
+	while (cin >> a && a[0] != 'q')
+	{
+		i = 0;
+		temp.clear();
+		ans = 0;
+
+		if (a[0] == '-')
+		{
+			a.erase(0, 1);
+			while (a[0] == '.' || (a[0] >= '0' && a[0] <= '9'))//幂次符
+			{
+				temp += a[0];
+				a.erase(0, 1);
+				if (a.empty())
+					break;
+			}
+			if (!a.empty())
+			{
+				a.erase(0, 1);
+				power = atoi(a.c_str());
+			}
+			else
+				power = 0;
+			
+			ans = atof(temp.c_str());
+			ans *= pow(10, power);
+			cout << "-" << fixed << setprecision(6) << ans << endl;
+		}
+		else
+		{
+			if (a[0] == '+')
+				a.erase(0, 1);
+			while (a[0] == '.' || (a[0] >= '0' && a[0] <= '9'))//幂次符
+			{
+				temp += a[0];
+				a.erase(0, 1);
+				if (a.empty())
+					break;
+			}
+			if (!a.empty())
+			{
+				a.erase(0, 1);
+				power = atoi(a.c_str());
+			}
+			else
+				power = 0;
+
+			ans = atof(temp.c_str());
+			ans *= pow(10, power);
+			cout << fixed << setprecision(6) << ans << endl;
+		}
+	}
+}
