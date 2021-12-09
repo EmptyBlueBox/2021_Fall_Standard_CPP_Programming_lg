@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+
+string jia(string m, string n)
+{
+	reverse(m.begin(), m.end());
+	reverse(n.begin(), n.end());
+	int a[220], b[220], c[220];
+	memset(a, 0, sizeof(a));
+	memset(b, 0, sizeof(b));
+	memset(c, 0, sizeof(c));
+	int i, j, k;
+	for (i = 1; i <= m.length(); i++)
+		a[i] = m[i - 1] - '0';
+	for (i = 1; i <= n.length(); i++)
+		b[i] = n[i - 1] - '0';
+	int jw = 0;
+	for (i = 1; i <= 219; i++)
+	{
+
+		c[i] = a[i] + b[i] + jw;
+		jw = c[i] / 10;
+		c[i] %= 10;
+	}
+
+	string ans;
+	int flag = 0;
+	for (i = 219; i >= 1; i--)
+	{
+		if (c[i] == 0 && flag == 0)
+			continue;
+		else
+		{
+			flag = 1;
+			ans += char(c[i] + '0');
+		}
+	}
+	if (ans.empty())//注意0+0特判
+		ans = "0";
+	return ans;
+}
+int main()
+{
+	int n;
+	string ans = "0";
+	string temp;
+	int i, j, k;
+	cin >> n;
+	for (i = 1; i <= n; i++)
+	{
+		cin >> temp;
+		ans = jia(ans, temp);
+	}
+	cout << ans;
+}
