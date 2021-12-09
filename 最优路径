@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int m, n;
+int a[210][210];
+int dp[210][210];
+bool come[210][210];
+int f(int i, int j)
+{
+	if (come[i][j] == true)
+		return dp[i][j];
+
+	come[i][j] = true;
+	if (j >= 2 && j <= n - 1)
+	{
+		if(come[i][j-1]==true)
+			dp[i][j] = max(f(i, j + 1), f(i - 1, j)) + a[i][j];
+		else if(come[i][j+1]==true)
+			dp[i][j] = max(f(i, j - 1), f(i - 1, j)) + a[i][j];
+		else
+			dp[i][j] = max(max(f(i, j - 1), f(i, j + 1)), f(i - 1, j)) + a[i][j];
+		return dp[i][j];
+	}
+	else if (j == 1)
+	{
+		if (come[i][j + 1] == true)
+			dp[i][j] = f(i - 1, j) + a[i][j];
+		else
+			dp[i][j] = max(f(i, j + 1), f(i - 1, j)) + a[i][j];
+		return dp[i][j];
+	}
+	else if (j == n)
+	{
+		if (come[i][j - 1] == true)
+			dp[i][j] = f(i - 1, j) + a[i][j];
+		else
+			dp[i][j] = max(f(i, j - 1), f(i - 1, j)) + a[i][j];
+		return dp[i][j];
+	}
+}
+int main()
+{
+	int i, j, k;
+	while (cin >> m >> n)
+	{
+		memset(a, 0, sizeof(a));
+		for (i = 1; i <= m; i++)
+			for (j = 1; j <= n; j++)
+				cin >> a[i][j];
+
+		int ans = -100000;
+		for (i = 1; i <= n; i++)//对第一行每一个做dp
+		{
+			memset(dp, 0, sizeof(dp));
+			memset(come, 0, sizeof(come));
+			dp[1][i] = a[1][i];
+			for (j = i - 1; j >= 1; j--)
+				dp[1][j] = dp[1][j + 1] + a[1][j];
+			for (j = i + 1; j <= n; j++)
+				dp[1][j] = dp[1][j - 1] + a[1][j];
+			for (j = 1; j <= n; j++)
+				come[1][j] = true;
+
+			for (j = 1; j <= n; j++)
+				ans = max(ans, f(m, j));
+		}
+		cout << ans << endl;
+	}
+}
