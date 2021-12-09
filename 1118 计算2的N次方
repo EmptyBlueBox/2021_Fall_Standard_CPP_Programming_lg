@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int i, j, n;
+	int a[101] = { 0 };
+	cin >> n;
+	a[0] = 1;
+
+	for (i = 1; i <= n; i++)
+	{
+		for (j = 0; j <= 100; j++)
+			a[j] *= 2;
+		int jw = 0;
+		for (j = 0; j <= 100; j++)
+		{
+			a[j] += jw;
+			jw = a[j] / 10;
+			a[j] %= 10;
+		}
+	}
+
+	int flag = 0;
+	for (j = 100; j >= 0; j--)
+	{
+		if (flag == 0 && a[j] == 0)
+			continue;
+		else
+		{
+			flag = 1;
+			cout << a[j];
+		}
+	}
+}
