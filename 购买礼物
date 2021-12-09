@@ -1,0 +1,29 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+struct info
+{
+	int w, value;
+}
+a[100];
+bool cmp(info x, info y)
+{
+	return x.w > y.w;
+}
+int main()
+{
+	int n, money;
+	int i, j, k;
+	cin >> n >> money;
+	for (i = 1; i <= n; i++)
+		cin >> a[i].value >> a[i].w;
+	sort(a + 1, a + n + 1, cmp);
+
+	int cnt = 0;
+	while (money >= 0 && cnt <= n)
+	{
+		money -= a[cnt + 1].value;
+		cnt++;
+	}
+	cout << cnt - 1;
+}
