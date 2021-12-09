@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+int to[10][2] = { 4,6,6,8,7,9,4,8,3,9,0,0,1,7,2,6,1,3,2,4 };
+int cnt = 0;
+int n0;
+void f(int step,int n)
+{
+	if (step == n0)
+	{
+		if (n == 4 || n == 6)
+			cnt += 3;
+		else
+			cnt += 2;
+		return;
+	}
+
+	f(step + 1, to[n][0]);
+	f(step + 1, to[n][1]);
+	if (n == 4 || n == 6)
+		f(step + 1, 0);
+}
+int main()
+{
+	int i;
+	cin >> n0;
+	for (i = 0; i <= 9; i++)
+	{
+		if (i == 5)
+			continue;
+		f(2, i);
+	}
+	cout << cnt;
+}
