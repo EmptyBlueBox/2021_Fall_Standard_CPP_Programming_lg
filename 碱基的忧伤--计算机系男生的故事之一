@@ -3,21 +3,9 @@
 #include <algorithm>
 using namespace std;
 int v[5][5];
-int dp[5001][5001];//相似度数组
+int dp[10001][10001];//相似度数组
 int d;
-int a[5001], b[5001];
-int f(int x, int y)
-{
-	if (dp[x][y] != 0x80000000)
-		return dp[x][y];
-	if (x == 0 && y == 0)
-		return 0;
-	dp[x][y] = max(dp[x][y], f(x - 1, y) + v[a[x]][0]);//max里不要写f（自己）
-	dp[x][y] = max(dp[x][y], f(x, y - 1) + v[0][b[y]]);
-	dp[x][y] = max(dp[x][y], f(x - 1, y - 1) + v[a[x]][b[y]]);
-	return dp[x][y];
-}
-
+int a[10001], b[10001];
 int main()
 {
 	int N;
@@ -64,17 +52,25 @@ int main()
 				else if (tempb[j - 1] == 'T')
 					b[j] = 4;
 			}
-
-			for (j = 0; j <= tempa.length() + 1; j++)
-				for (k = 0; k <= tempb.length() + 1; k++)
-					dp[j][k] = 0x80000000;
+			int s = tempa.length(), t = tempb.length();
 			dp[0][0] = 0;
-			for (j = 1; j <= 5000; j++)
+			for (j = 1; j <= s + t; j++)
 			{
 				dp[j][0] = dp[j - 1][0] + d;
 				dp[0][j] = dp[0][j - 1] + d;
 			}
-			cout << f(tempa.length(), tempb.length()) << endl;
+			dp[0][0] = 0;
+
+			for (j = 2; j <= s + t; j++)
+			{
+				for (k = 1; k <= j - 1; k++)
+				{
+					dp[j - k][k] = max(dp[j - k][k], dp[j - 1 - k][k] + v[a[j - k]][0]);
+					dp[j - k][k] = max(dp[j - k][k], dp[j - k][k - 1] + v[0][b[k]]);
+					dp[j - k][k] = max(dp[j - k][k], dp[j - 1 - k][k - 1] + v[a[j - k]][b[k]]);
+				}
+			}
+			cout << dp[s][t] << endl;
 		}
 	}
 }
