@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+int shu[51], dp[51][51];
+char fu[51];
+
+int f(int x, int y)
+{
+	if (dp[x][y] != 0)
+		return dp[x][y];
+	if (x == y)
+		return shu[x];
+
+	int i, j, k;
+	for (i = x; i <= y - 1; i++)
+	{
+		if (fu[i] == '+')
+			dp[x][y] = max(dp[x][y], f(x, i) + f(i + 1, y));
+		else if(fu[i]=='*')
+			dp[x][y] = max(dp[x][y], f(x, i) * f(i + 1, y));
+	}
+	return dp[x][y];
+}
+int main()
+{
+	int n;
+	cin >> n;
+	int i, j;
+	for (i = 1; i <= n; i++)
+		cin >> shu[i] >> fu[i];
+	int ans = 0;
+	for (i = 1; i <= n; i++)//每一个边都断一次
+	{
+		memset(dp, 0, sizeof(dp));
+
+		ans = max(ans, f(1, n));
+
+		int temp1 = shu[1];
+		char temp2 = fu[1];
+		for (j = 1; j <= n - 1; j++)
+		{
+			shu[j] = shu[j + 1];
+			fu[j] = fu[j + 1];
+		}
+		shu[n] = temp1;
+		fu[n] = temp2;
+	}
+	cout << ans;
+}
