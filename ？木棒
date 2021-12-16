@@ -1,0 +1,71 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+int a[70], n, sum, cnt;//cnt为原来几根木棍
+int vis[70];
+bool cmp(int x, int y)
+{
+	return x > y;
+}
+//一根木棍之中不能回头加，否则重复运算
+bool f(int pos, int len, int m)//一个木棍中加到总数组第几个位置了（防止回头加），现在长度，现在总共有m个木棍了
+{
+	if (m >= cnt)
+		return true;
+	if (len > sum / cnt)
+		return false;
+	if (len == sum / cnt)
+		return f(0, 0, m + 1);
+
+	int i, j;
+	int fail = 0;//某长度木棒不能用的时候，如果之后又出现这个长度的木棒直接跳过
+	for (i = pos + 1; i <= n; i++)//把限制条件写在for里面会造成提前break而不是continue
+	{
+		if (vis[i] == true || a[i] == fail || sum / cnt - len < a[i])
+			continue;
+
+		vis[i] = true;
+		if (f(i, len + a[i], m))
+			return true;
+		fail = a[i];
+		vis[i] = false;
+
+		if (len == 0 || len + a[i] == sum / cnt)
+			return false;
+/*还有一个难想却特别特别重要的优化：如果当前长棍剩余的未拼长度等于当前木棍的长度或原始长度，
+继续拼下去时却失败了，就直接回溯并改之前拼的木棍。有些人不太明白这个优化，这里简单说一下：
+当前长棍剩余的未拼长度等于当前木棍的长度时，这根木棍在最优情况下显然是拼到这（如果用更多短木根拼完剩下的这段，
+把这根木棍留到后面显然不如把更多总长相等的短木棍扔到后面）。如果在最优情况下继续拼下去失败了，那肯定是之前的木棍用错了，回溯改即可.
+当前长棍剩余的未拼长度等于原始长度时，说明这根原来的长棍还一点没拼，现在正在放入一根木棍。
+很明显，这根木棍还没有跟其它棍子拼接，如果现在拼下去能成功话，它肯定是能用上的，即自组或与其它还没用的木棍拼接。
+但继续拼下去却失败，说明现在这根木棍不能用上，无法完成拼接，所以回溯改之前的木棍。*/
+
+	}
+	return false;
+}
+int main()
+{
+	int i, j;
+	while (cin >> n && n != 0)
+	{
+		sum = 0;
+		memset(vis, 0, sizeof(vis));
+		for (i = 1; i <= n; i++)
+		{
+			cin >> a[i];
+			sum += a[i];
+		}
+		sort(a + 1, a + n + 1, cmp);
+		for (cnt = sum; cnt >= 1; cnt--)
+		{
+			if (sum % cnt != 0)
+				continue;
+			if (f(0, 0, 0))
+			{
+				cout << sum / cnt << endl;
+				break;
+			}
+		}
+	}
+}
