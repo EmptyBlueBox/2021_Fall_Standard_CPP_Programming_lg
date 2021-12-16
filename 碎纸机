@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+vector<int> ans, temp;
+int sum, tempsum;
+int isrejected = 0;
+int n;
+string a;
+
+void f(string s)
+{
+	int tmp;
+	int i, j;
+	string save = s;
+	if (s.empty())
+	{
+		for (i = 0; i <= temp.size() - 1; i++)
+			tempsum += temp[i];
+		if (tempsum > sum && tempsum <= n)
+		{
+			sum = tempsum;
+			ans.assign(temp.begin(), temp.end());//如何给vector赋值？
+			isrejected = 0;
+		}
+		else if (tempsum == sum)
+			isrejected = 1;
+		tempsum = 0;//temp变量用完在同一层初始化
+		return;
+	}
+	
+	for (i = 1; i <= save.length(); i++)
+	{
+		tmp = atoi(s.substr(0, i).c_str());
+		temp.push_back(tmp);
+		s.erase(0, i);
+		f(s);
+		s = save;
+		temp.pop_back();//别忘了全回溯
+	}
+}
+int main()
+{
+	int i, j, k;
+	while (cin >> n >> a && n != 0)
+	{
+		ans.clear();
+		temp.clear();
+		sum = 0;
+		tempsum = 0;
+		isrejected = 0;
+		f(a);
+
+		if (isrejected == 1)
+		{
+			cout << "rejected" << endl;
+			continue;
+		}
+		else if (sum == 0)
+		{
+			cout << "error" << endl;
+			continue;
+		}
+		else
+		{
+			cout << sum;
+			for (i = 0; i <= ans.size() - 1; i++)
+				cout << " " << ans[i];
+			cout << endl;
+			continue;
+		}
+	}
+	return 0;
+}
