@@ -1,0 +1,29 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+int a[100][100], dp[100][100];
+int n;
+int f(int x, int y)
+{
+	if (dp[x][y] != 0)
+		return dp[x][y];
+
+	dp[x][y] = min(f(x - 1, y), f(x, y - 1)) + a[x][y];
+	return dp[x][y];
+}
+int main()
+{
+	int i, j, k;
+	cin >> n;
+	for (i = 1; i <= n; i++)
+		for (j = 1; j <= n; j++)
+			cin >> a[i][j];
+	memset(dp, 0, sizeof(dp));
+	for (i = 0; i <= 99; i++)
+	{
+		dp[0][i] = 0x7fffffff;
+		dp[i][0] = 0x7fffffff;
+	}
+	dp[1][1] = a[1][1];
+	cout << f(n, n);
+}
