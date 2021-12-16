@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+int v[5][5];
+int dp[5001][5001];//相似度数组
+int d;
+int a[5001], b[5001];
+int f(int x, int y)
+{
+	if (dp[x][y] != 0x80000000)
+		return dp[x][y];
+	if (x == 0 && y == 0)
+		return 0;
+	dp[x][y] = max(dp[x][y], f(x - 1, y) + v[a[x]][0]);//max里不要写f（自己）
+	dp[x][y] = max(dp[x][y], f(x, y - 1) + v[0][b[y]]);
+	dp[x][y] = max(dp[x][y], f(x - 1, y - 1) + v[a[x]][b[y]]);
+	return dp[x][y];
+}
+
+int main()
+{
+	int N;
+	int i, j, k;
+	int n;
+	string tempa, tempb;
+	while (cin >> N)
+	{
+		printf("Case #%d", N);
+		cout << endl;
+
+		for (i = 1; i <= 4; i++)
+			for (j = 1; j <= 4; j++)
+				cin >> v[i][j];
+		cin >> d;
+		cin >> n;
+		for (i = 0; i <= 4; i++)
+		{
+			v[0][i] = d;
+			v[i][0] = d;
+		}
+		for (i = 1; i <= n; i++)
+		{
+			cin >> tempa >> tempb;
+			for (j = 1; j <= tempa.length(); j++)
+			{
+				if (tempa[j - 1] == 'A')
+					a[j] = 1;
+				else if (tempa[j - 1] == 'G')
+					a[j] = 2;
+				else if (tempa[j - 1] == 'C')
+					a[j] = 3;
+				else if (tempa[j - 1] == 'T')
+					a[j] = 4;
+			}
+			for (j = 1; j <= tempb.length(); j++)
+			{
+				if (tempb[j - 1] == 'A')
+					b[j] = 1;
+				else if (tempb[j - 1] == 'G')
+					b[j] = 2;
+				else if (tempb[j - 1] == 'C')
+					b[j] = 3;
+				else if (tempb[j - 1] == 'T')
+					b[j] = 4;
+			}
+
+			for (j = 0; j <= tempa.length() + 1; j++)
+				for (k = 0; k <= tempb.length() + 1; k++)
+					dp[j][k] = 0x80000000;
+			dp[0][0] = 0;
+			for (j = 1; j <= 5000; j++)
+			{
+				dp[j][0] = dp[j - 1][0] + d;
+				dp[0][j] = dp[0][j - 1] + d;
+			}
+			cout << f(tempa.length(), tempb.length()) << endl;
+		}
+	}
+}
