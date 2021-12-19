@@ -1,0 +1,79 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <algorithm>
+using namespace std;
+string a[101];
+bool vis[101] = { false };
+string ans, tempans;
+int len0 = 0x7fffffff;
+int n;
+void f(string x)//取剩下的一部分去跟所有的没用过的去比直到能跟一个原字符串完全相同
+{
+	if (x.empty())
+	{
+		int len = tempans.length();
+		if (len < len0)
+			ans = tempans, len0 = len;
+		else if (len == len0)
+			if (tempans < ans)
+				ans = tempans;
+		return;
+	}
+
+	int i, j, k;
+	string leftagain;
+	string forcmp;
+	for (i = 1; i <= n; i++)
+	{
+		if (vis[i] == true)
+			continue;
+		if (a[i].length() >= x.length())
+		{
+			forcmp = a[i].substr(0, x.length());
+			if (forcmp == x)
+			{
+				leftagain = a[i];
+				leftagain.erase(0, x.length());
+
+				tempans += leftagain;
+				vis[i] = true;
+				f(leftagain);
+				vis[i] = false;
+				tempans.erase(tempans.length() - leftagain.length(), leftagain.length());
+			}
+		}
+		else if (a[i].length() < x.length())
+		{
+			forcmp = x.substr(0, a[i].length());
+			if (forcmp == a[i])
+			{
+				leftagain = x;
+				leftagain.erase(0, a[i].length());
+
+				vis[i] = true;
+				f(leftagain);
+				vis[i] = false;
+			}
+		}
+	}
+}
+
+int main()
+{
+	int i, j, k;
+	cin >> n;
+	for (i = 1; i <= n; i++)
+		cin >> a[i];
+	for (i = 1; i <= n; i++)
+	{
+		vis[i] = true;
+		tempans = a[i];
+		f(a[i]);
+		tempans.clear();
+		vis[i] = false;
+	}
+	cout << ans << endl;//一定要输出endl
+	if (ans.empty())
+		cout << 0 << endl;
+}
