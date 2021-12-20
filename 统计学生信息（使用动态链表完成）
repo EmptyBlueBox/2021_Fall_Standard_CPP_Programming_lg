@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+typedef struct info
+{
+	string a;
+	struct info* next;
+}
+node;
+//删除当前pre节点
+void del(node* pre, node* cur)
+{
+	pre->next = cur->next;
+	free(cur);
+}
+node *insert(node* head, string n)
+{
+	//先开一个新节点，一会直接放进去
+	node* newbegin = new node;
+	newbegin->a = n;
+	newbegin->next = head;//开新节点一定要置空指针！！！
+	return newbegin;
+}
+void pt(node* begin)
+{
+	while (begin != nullptr)
+		cout << begin->a << endl, begin = begin->next;
+	return;
+}
+int main()
+{
+	int i, j, k;
+	node* head, * temp;
+	//给head指针指向的地方开一个以node为基类型的空间,
+	head = new node;
+	//head对应的第一个节点里不存数据！！！
+	head->next = nullptr;
+
+	string tempa;
+	while (getline(cin, tempa) && tempa != "end")
+		head = insert(head, tempa);
+	pt(head);
+}
