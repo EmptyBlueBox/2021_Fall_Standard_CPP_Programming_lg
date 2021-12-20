@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+
+typedef struct info
+{
+	int a;
+	struct info* next;
+}
+node;
+
+//删除当前cur节点
+void del(node* pre, node* cur)
+{
+	pre->next = cur->next;
+	free(cur);
+}
+void quchong(node* begin)
+{
+	if (begin->next->next == nullptr)//只有一个数不用去重
+		return;
+	node* pre, * cur, * prepre;//prepre为了删除pre
+	prepre = begin;
+	pre = begin->next;
+	cur = begin->next->next;
+
+	while (cur != nullptr)
+	{
+		if (pre->a == cur->a)
+		{
+			while (cur != nullptr && pre->a == cur->a)
+			{
+				del(pre, cur);
+				cur = pre->next;
+			}
+			del(prepre, pre);
+		}
+
+		pre = prepre->next;
+		if (pre == nullptr)//经常判断是不是nullptr
+			break;
+		cur = pre->next;
+		if (cur == nullptr)
+			break;
+		if (pre->a == cur->a)
+			continue;
+
+		prepre = prepre->next;
+		if (prepre == nullptr)
+			break;
+		pre = prepre->next;
+		if (pre == nullptr)
+			break;
+		cur = pre->next;
+	}
+}
+void insert(node* head, int n)
+{
+	//当前节点的指针和下一个节点的指针，最后插入到当前节点之后
+	node* tmpcur = head, * tmpnext = head->next;
+	//先开一个新节点，一会直接放进去
+	node* newbegin = new node;
+	newbegin->a = n;
+	newbegin->next = nullptr;//开新节点一定要置空指针！！！
+
+	while (tmpnext != nullptr && tmpnext->a < n)
+	{
+		tmpcur = tmpnext;
+		tmpnext = tmpnext->next;
+	}
+	//cur节点的next指针成为newbegin
+	tmpcur->next = newbegin;
+	//newbegin节点的next指针成为tmpnext
+	newbegin->next = tmpnext;
+}
+void pt(node* begin)//begin这个节点是没有具体数据的
+{
+	begin = begin->next;
+	if (begin == nullptr)
+	{
+		cout << endl;
+		return;
+	}
+	cout << begin->a;
+	begin = begin->next;
+	while (begin != nullptr)
+		cout << " " << begin->a, begin = begin->next;
+	return;
+}
+int main()
+{
+
+
+	int i, j, k;
+	int n;
+	cin >> n;
+	if (n == 0)//特判输入为0
+	{
+		cout << endl;
+		return 0;
+	}
+	node* head, * temp;
+	//给head指针指向的地方开一个以node为基类型的空间,
+	head = new node;
+	//head对应的第一个节点里不存数据！！！
+	head->next = nullptr;
+
+	int tempa;
+	for (i = 1; i <= n; i++)
+	{
+		cin >> tempa;
+		insert(head, tempa);
+	}
+	quchong(head);
+	pt(head);
+}
