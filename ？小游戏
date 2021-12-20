@@ -1,0 +1,104 @@
+#include <iostream>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+struct point
+{
+	int x, y;
+};
+int m, n;
+queue<point>a;
+int dis[77][77];//99999还没经过，其它的是到起点的线段根数  初始化-1
+int map[77][77] = { 0 };//-1墙，0空地  初始化0
+char p;
+int step[4][2] = { -1,0,0,1,1,0,0,-1 };
+int bfs(int x1, int y1, int x2, int y2)
+{
+	int i, j;
+	point temp, k;
+	int tempx, tempy;
+	while (!a.empty())
+	{
+		temp = a.front();//中心点temp，发散出去tempx和tempy
+		a.pop();
+		
+		for (i = 0; i <= 3; i++)
+		{
+			tempx = temp.x;
+			tempy = temp.y;
+			if (tempx + step[i][0] <= -1 || tempx + step[i][0] >= n + 2 || tempy + step[i][1] <= -1 || tempy + step[i][1] >= m + 2)
+				continue;
+			while (dis[tempx + step[i][0]][tempy + step[i][1]] == -1 && map[tempx + step[i][0]][tempy + step[i][1]] == 0)//这个方向的一条射线，如果还没经过这个点并且本来是空地
+			{
+				if (tempx + step[i][0] <= -1 || tempx + step[i][0] >= n + 2 || tempy + step[i][1] <= -1 || tempy + step[i][1] >= m + 2)
+					break;
+				tempx += step[i][0];
+				tempy += step[i][1];
+				dis[tempx][tempy] = dis[temp.x][temp.y] + 1;
+				k.x = tempx;
+				k.y = tempy;
+				a.push(k);
+			}
+			if (tempx + step[i][0] == x2 && tempy + step[i][1] == y2)
+				return dis[temp.x][temp.y] + 1;
+		}
+	}
+	return -1;
+}
+
+int main()
+{
+	int i, j, k;
+	int x1, y1, x2, y2;
+	int cnt = 0;
+	
+	while (cin >> m >> n)
+	{
+		if (m == 0 && n == 0)
+			return 0;
+		memset(map, 0, sizeof(map));
+		while (!a.empty())
+			a.pop();
+		memset(dis, -1, sizeof(dis));
+		for (i = 1; i <= n; i++)
+		{
+			for (j = 1; j <= m; j++)
+			{
+			flag: {};
+				p = getchar();
+				if (p == '\n')
+					goto flag;
+				if (p == 'X')
+					map[i][j] = -1;
+			}
+		}
+
+		i = 0;
+		cout << "Board #" << ++cnt << ":" << endl;
+
+		while (cin >> y1 >> x1 >> y2 >> x2 && x1 != 0)
+		{
+			while (!a.empty())
+				a.pop();
+			memset(dis, -1, sizeof(dis));//每一次算距离都要初始化距离数组
+			point begin;
+			begin.x = x1;
+			begin.y = y1;
+			a.push(begin);//向队列里放起点，初始化队列
+			dis[x1][y1] = 0;//初始化起点的距离
+
+			int ans = bfs(x1, y1, x2, y2);
+			cout << "Pair " << ++i << ": ";
+			if (ans == -1)
+			{
+				cout << "impossible." << endl;
+			}
+			else
+			{
+				cout << ans << " segments." << endl;
+			}
+		}
+		cout << endl;
+	}
+}
