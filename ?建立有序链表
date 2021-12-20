@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+
+typedef struct info
+{
+	int a;
+	struct info* next;
+}
+node;
+//删除当前pre节点
+void del(node* pre, node* cur)
+{
+	pre->next = cur->next;
+	free(cur);
+}
+void insert(node* head, int n)
+{
+	//当前节点的指针和下一个节点的指针，最后插入到当前节点之后
+	node* tmpcur = head, * tmpnext = head->next;
+	//先开一个新节点，一会直接放进去
+	node* newbegin = new node;
+	newbegin->a = n;
+	newbegin->next = nullptr;//开新节点一定要置空指针！！！
+
+	while (tmpnext != nullptr && tmpnext->a < n)
+	{
+		tmpcur = tmpnext;
+		tmpnext = tmpnext->next;
+	}
+
+	//cur节点的next指针成为newbegin
+	tmpcur->next = newbegin;
+	//newbegin节点的next指针成为tmpnext
+	newbegin->next = tmpnext;
+}
+void pt(node* begin)//begin这个节点是没有具体数据的
+{
+	begin = begin->next;
+	cout << begin->a;
+	begin = begin->next;
+	while (begin != nullptr)
+		cout << " " << begin->a, begin = begin->next;
+	return;
+}
+int main()
+{
+	
+
+	int i, j, k;
+	int N;
+	cin >> N;
+	cout << 0;
+	for (i = 1; i <= N; i++)
+	{
+		node* head, * temp;
+		//给head指针指向的地方开一个以node为基类型的空间,
+		head = new node;
+		//head对应的第一个节点里不存数据！！！
+		head->next = nullptr;
+		
+		int tempa;
+		while (cin >> tempa)
+		{
+			insert(head, tempa);
+			//多行输入不知道什么时候结束一行这样处理！！！
+			if (getchar() == '\n')
+				break;
+		}
+
+		pt(head);
+		cout << endl;
+	}
+	
+}
