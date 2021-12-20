@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+int zuo, you;//剩余数目
+int n;
+string a;
+void f(int step)
+{
+	if (step == 2 * n)
+	{
+		a += ')';
+		cout << a << endl;
+		a.erase(2 * n - 1, 1);
+		return;
+	}
+
+	if (zuo >= 1)
+	{
+		zuo--;
+		a += '(';
+		f(step + 1);
+		a.erase(a.length() - 1, 1);
+		zuo++;
+	}
+	if (you >= 1 && zuo < you)
+	{
+		you--;
+		a += ')';
+		f(step + 1);
+		a.erase(a.length() - 1, 1);
+		you++;
+	}
+		
+}
+int main()
+{
+	cin >> n;
+	zuo = n;
+	you = n;
+	f(1);
+	return 0;
+}
