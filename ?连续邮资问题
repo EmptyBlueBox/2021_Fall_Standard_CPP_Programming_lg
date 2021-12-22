@@ -1,0 +1,55 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+int m, n;//n张邮票，m种面值
+int ans, tempmax;
+int v[10];
+int dypr()
+{
+	int i, j, k;
+	int dp[100] = { 0 };//某面值至少需要几张邮票
+	dp[0] = 0;
+	int m0 = 1;
+	for (i = 1; i <= n * v[m]; i++)
+	{
+		dp[i] = 0x7fffffff;
+		for (j = 1; j <= m; j++)
+		{
+			if (i < v[j])
+				break;
+			dp[i] = min(dp[i], dp[i - v[j]] + 1);
+		}
+		if (dp[i] == n + 1)
+			break;
+	}
+	return i - 1;
+}
+void dfs(int valuetype)
+{
+	int i, j, k;
+	if (valuetype == m)
+	{
+		tempmax = dypr();
+		ans = max(ans, tempmax);
+		return;
+	}
+
+	for (i = v[valuetype] + 1; i <= v[valuetype] * n + 1; i++)
+	{
+		v[valuetype + 1] = i;
+		dfs(valuetype + 1);
+	}
+}
+int main()
+{
+	int i, j, k;
+	while (cin >> m >> n && n != 0)
+	{
+		ans = 0x80000000;
+		memset(v, 0, sizeof(v));
+		v[1] = 1;
+		dfs(1);
+
+		cout << ans << endl;
+	}
+}
